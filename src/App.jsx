@@ -14,7 +14,15 @@ function App() {
       <div className="pt-20 max-w-3xl mx-auto px-4">
         <Routes>
           <Route path="/" element={<Feed />} />
-          <Route path="/reels" element={<Reels />} />
+         <Route
+            path="/reels"
+            element={
+            <div className="pt-20 w-full px-0">
+              <Reels />
+            </div>
+            }
+          />
+
           <Route path="/live" element={<Live />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>

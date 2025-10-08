@@ -114,7 +114,9 @@ export default function Feed() {
         {posts.length === 0 ? (
           <p className="text-center text-gray-500">Chưa có bài đăng nào.</p>
         ) : (
-          posts.map((post) => (
+          posts
+          .filter((p) => p.type !== "reel")
+          .map((post) => (
             <PostCard
               key={post.id}
               post={post}
