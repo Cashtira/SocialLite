@@ -8,14 +8,16 @@ import Profile from "./pages/Profile";
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50 text-gray-800">
+      <div className="bg-gray-100 min-h-screen flex flex-col">
         <Navbar />
-        <Routes>
-          <Route path="/" element={<Feed />} />
-          <Route path="/upload" element={<Upload />} />
-          <Route path="/live" element={<Live />} />
-          <Route path="/profile" element={<Profile />} />
-        </Routes>
+        <div className="flex-1 p-4 mt-16">
+          <Routes>
+            <Route path="/" element={<Feed />} />
+            <Route path="/upload" element={<Upload />} />
+            <Route path="/live" element={<Live />} />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+        </div>
       </div>
     </Router>
   );
