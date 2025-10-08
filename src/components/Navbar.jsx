@@ -1,38 +1,63 @@
-import { Link, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-function Navbar() {
-  const { pathname } = useLocation();
-
-  const navItems = [
-    { name: "Feed", path: "/" },
-    { name: "Upload", path: "/upload" },
-    { name: "Live", path: "/live" },
-    { name: "Profile", path: "/profile" },
-  ];
+export default function Navbar() {
+  const base =
+    "px-3 py-2 rounded-lg font-medium transition-colors duration-200";
+  const active =
+    "bg-blue-600 text-white hover:bg-blue-600";
+  const inactive =
+    "text-gray-700 hover:bg-blue-100 hover:text-blue-700";
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
-      <div className="max-w-6xl mx-auto flex justify-between items-center px-6 py-3">
-        <h1 className="text-2xl font-bold text-blue-600">SocialLite</h1>
-        <ul className="flex space-x-6">
-          {navItems.map((item) => (
-            <li key={item.path}>
-              <Link
-                to={item.path}
-                className={`font-medium ${
-                  pathname === item.path
-                    ? "text-blue-600"
-                    : "text-gray-600 hover:text-blue-500"
-                }`}
-              >
-                {item.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
+    <nav className="fixed top-0 left-0 right-0 bg-white border-b shadow-sm z-50">
+      <div className="max-w-5xl mx-auto flex items-center justify-between px-4 py-3">
+        {/* Logo */}
+        <NavLink
+          to="/"
+          className="text-2xl font-bold text-blue-700 select-none"
+        >
+          SocialLite
+        </NavLink>
+
+        {/* Navigation Links */}
+        <div className="flex gap-2">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `${base} ${isActive ? active : inactive}`
+            }
+          >
+            🏠 Feed
+          </NavLink>
+
+          <NavLink
+            to="/reels"
+            className={({ isActive }) =>
+              `${base} ${isActive ? active : inactive}`
+            }
+          >
+            🎬 Reels
+          </NavLink>
+
+          <NavLink
+            to="/live"
+            className={({ isActive }) =>
+              `${base} ${isActive ? active : inactive}`
+            }
+          >
+            📡 Live
+          </NavLink>
+
+          <NavLink
+            to="/profile"
+            className={({ isActive }) =>
+              `${base} ${isActive ? active : inactive}`
+            }
+          >
+            👤 Profile
+          </NavLink>
+        </div>
       </div>
     </nav>
   );
 }
-
-export default Navbar;

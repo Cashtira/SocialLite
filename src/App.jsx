@@ -1,25 +1,25 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Feed from "./pages/Feed";
-import Upload from "./pages/Upload";
-import Live from "./pages/Live";
-import Profile from "./pages/Profile";
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar.jsx";
+
+// Import các trang
+import Feed from "./pages/Feed.jsx";
+import Reels from "./pages/Reels.jsx";
+import Live from "./pages/Live.jsx";
+import Profile from "./pages/Profile.jsx";
 
 function App() {
   return (
-    <Router>
-      <div className="bg-gray-100 min-h-screen flex flex-col">
-        <Navbar />
-        <div className="flex-1 p-4 mt-16">
-          <Routes>
-            <Route path="/" element={<Feed />} />
-            <Route path="/upload" element={<Upload />} />
-            <Route path="/live" element={<Live />} />
-            <Route path="/profile" element={<Profile />} />
-          </Routes>
-        </div>
+    <>
+      <Navbar />
+      <div className="pt-20 max-w-3xl mx-auto px-4">
+        <Routes>
+          <Route path="/" element={<Feed />} />
+          <Route path="/reels" element={<Reels />} />
+          <Route path="/live" element={<Live />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
       </div>
-    </Router>
+    </>
   );
 }
 
