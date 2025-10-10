@@ -1,12 +1,9 @@
-import { useContext } from "react";
-import { PostContext } from "../context/PostContext";
-import { UserContext } from "../context/UserContext";
 import { usePosts } from "../hooks/usePost";
 import { useUser } from "../hooks/useUser";
 import PostCard from "../components/PostCard";
 
 export default function Profile() {
-  const { posts, toggleLike, addComment, removePost } = usePosts();
+  const { posts, toggleLike, addComment, toggleCommentLike, removePost } = usePosts();
   const { currentUser } = useUser();
 
   if (!currentUser) return <p>Đang tải...</p>;
@@ -38,6 +35,7 @@ export default function Profile() {
               post={post}
               onLike={toggleLike}
               onAddComment={addComment}
+              onToggleCommentLike={toggleCommentLike}
               onDelete={removePost}
             />
           ))

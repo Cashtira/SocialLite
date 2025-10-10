@@ -4,12 +4,12 @@ import { useUser } from "../hooks/useUser.js";
 import PostCard from "../components/PostCard";
 
 export default function Feed() {
-  const { posts, addPost, toggleLike, addComment, removePost } = usePosts();
-  const { currentUser} = useUser();
-  // form state
+  const { posts, addPost, toggleLike, addComment, removePost, toggleCommentLike } = usePosts();
+  const { currentUser } = useUser();
+
   const [caption, setCaption] = useState("");
-  const [fileData, setFileData] = useState(null); // data URL
-  const [mediaType, setMediaType] = useState(null); // "image" | "video" | null
+  const [fileData, setFileData] = useState(null);
+  const [mediaType, setMediaType] = useState(null);
   const [isReel, setIsReel] = useState(false);
 
   const handleFile = (e) => {
@@ -35,9 +35,7 @@ export default function Feed() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // rules:
-    // - if isReel === true => must have a video (mediaType === "video")
-    // - if isReel === false => can have image or video or none (text-only)
+
     if (isReel && mediaType !== "video") {
       return alert("Reel phải là video. Vui lòng chọn file video.");
     }
@@ -51,6 +49,7 @@ export default function Feed() {
       id: crypto.randomUUID(),
       userId: currentUser.id,
       userName: currentUser.name,
+      userAvatar: currentUser.avatar,
       caption: caption.trim(),
       media: fileData,
       type,
@@ -66,7 +65,7 @@ export default function Feed() {
 
   return (
     <div className="max-w-3xl mx-auto">
-      {/* Post form */}
+      {/* Form tạo bài viết */}
       <div className="bg-white p-4 rounded-2xl shadow-md mb-6">
         <h3 className="text-lg font-semibold mb-3">Tạo bài viết</h3>
         <form onSubmit={handleSubmit} className="space-y-3">
@@ -111,24 +110,27 @@ export default function Feed() {
         </form>
       </div>
 
-      {/* Posts list */}
+      {/* Danh sách bài viết */}
       <div className="space-y-4">
         {posts.length === 0 ? (
           <p className="text-center text-gray-500">Chưa có bài đăng nào.</p>
         ) : (
           posts
-          .filter((p) => p.type !== "reel")
-          .map((post) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              onLike={(id) => toggleLike(id)}
-              onAddComment={(postId, comment) => addComment(postId, comment)}
-              onDelete={(id) => {
-                if (confirm("Xác nhận xóa bài?")) removePost(id);
-              }}
-            />
-          ))
+            .filter((p) => p.type !== "reel")
+            .map((post) => (
+              <PostCard
+                key={post.id}
+                post={post}
+                onLike={(id) => toggleLike(id)}
+                onAddComment={(postId, comment) => addComment(postId, comment)}
+                onDelete={(id) => {
+                  if (confirm("Xác nhận xóa bài?")) removePost(id);
+                }}
+                onToggleCommentLike={(postId, commentId) =>
+                  toggleCommentLike(postId, commentId)
+                }
+              />
+            ))
         )}
       </div>
     </div>

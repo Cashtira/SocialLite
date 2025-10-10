@@ -1,32 +1,59 @@
 import { useState } from "react";
 import CommentBox from "./CommentBox";
 
-export default function PostCard({ post, onLike, onAddComment, onDelete }) {
+export default function PostCard({
+  post,
+  onLike,
+  onAddComment,
+  onDelete,
+  onToggleCommentLike,
+}) {
   const [showComments, setShowComments] = useState(false);
 
   return (
     <article className="border rounded-2xl p-4 hover:shadow-md transition-shadow bg-white">
+      {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center">😎</div>
+          <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+            {post.userAvatar ? (
+              <img
+                src={post.userAvatar}
+                alt={`${post.userName || "Người dùng ẩn danh"} avatar`}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <span className="text-xl">😎</span>
+            )}
+          </div>
           <div>
-            <p className="font-semibold text-gray-800">{post.user || "Người dùng ẩn danh"}</p>
+            <p className="font-semibold text-gray-800">
+              {post.userName || "Người dùng ẩn danh"}
+            </p>
             <p className="text-xs text-gray-500">{post.createdAt}</p>
           </div>
         </div>
         <div className="text-sm text-gray-400">{post.type}</div>
       </div>
 
-      <p className="mb-3 text-gray-700">{post.caption}</p>
-
-      {post.media && (
-        post.type === "image" ? (
-          <img src={post.media} alt="post" className="w-full rounded-lg mb-3" />
-        ) : (
-          <video src={post.media} controls className="w-full rounded-lg mb-3" />
-        )
+      {/* Caption */}
+      {post.caption && (
+        <p className="mb-3 text-gray-700 whitespace-pre-line">{post.caption}</p>
       )}
 
+      {/* Media */}
+      {post.media &&
+        (post.type === "image" ? (
+          <img
+            src={post.media}
+            alt="post"
+            className="w-full rounded-lg mb-3 object-cover"
+          />
+        ) : (
+          <video src={post.media} controls className="w-full rounded-lg mb-3" />
+        ))}
+
+      {/* Actions */}
       <div className="flex items-center gap-4">
         <button
           onClick={() => onLike(post.id)}
@@ -53,9 +80,15 @@ export default function PostCard({ post, onLike, onAddComment, onDelete }) {
         </button>
       </div>
 
+      {/* Comments */}
       {showComments && (
         <div className="mt-4">
-          <CommentBox postId={post.id} comments={post.comments ?? []} onAdd={onAddComment} />
+          <CommentBox
+            postId={post.id}
+            comments={post.comments ?? []}
+            onAdd={onAddComment}
+            onToggleLike={onToggleCommentLike} 
+          />
         </div>
       )}
     </article>

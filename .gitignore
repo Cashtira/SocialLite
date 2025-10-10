@@ -1,24 +1,46 @@
-# Logs
-logs
-*.log
+# Node
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Build outputs
+dist/
+build/
+.vite/
+coverage/
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+Thumbs.db
+
+# Logs
+logs/
+*.log
+*.out
+*.err
+
+# Backend specific
+/back-end/node_modules/
+/back-end/dist/
+/back-end/.env
+
+# Frontend specific
+/front-end/node_modules/
+/front-end/dist/
+/front-end/.env
+/front-end/.vite/
+
+# Optional: ignore package-lock if using yarn or pnpm
+# package-lock.json

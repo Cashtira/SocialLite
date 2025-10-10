@@ -19,7 +19,6 @@ export default function Navbar() {
           SocialLite
         </NavLink>
 
-        {/* Navigation Links */}
         <div className="flex gap-2">
           <NavLink
             to="/"
