@@ -6,9 +6,9 @@ export default function ReelCard({ post, onLike, onAddComment, onDelete }) {
   const [showComments, setShowComments] = useState(false);
   const [isVertical, setIsVertical] = useState(true);
   const videoRef = useRef(null);
-  const cardRef = useRef(null); // ✅ thêm ref mới cho cả reel card
+  const cardRef = useRef(null); 
 
-  // ✅ Xác định hướng video (ngang/dọc)
+  // Xác định hướng video (ngang/dọc)
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -22,7 +22,7 @@ export default function ReelCard({ post, onLike, onAddComment, onDelete }) {
     return () => video.removeEventListener("loadedmetadata", handleLoadedMetadata);
   }, []);
 
-  // ✅ Auto play/pause video & đóng comment khi reel rời viewport
+  // Auto play
   useEffect(() => {
     const card = cardRef.current;
     const video = videoRef.current;
@@ -35,7 +35,7 @@ export default function ReelCard({ post, onLike, onAddComment, onDelete }) {
             video.play().catch(() => {});
           } else {
             video.pause();
-            setShowComments(false); // 🔥 auto đóng khi lướt sang reel khác
+            setShowComments(false); // Đóng vid khi qua reel khác
           }
         });
       },
@@ -48,7 +48,7 @@ export default function ReelCard({ post, onLike, onAddComment, onDelete }) {
 
   return (
     <motion.div
-      ref={cardRef} // ✅ observe toàn bộ reel card
+      ref={cardRef} 
       layout
       transition={{ type: "spring", stiffness: 80, damping: 15 }}
       className="relative flex justify-center items-start w-full h-[calc(100vh-5rem)] snap-start"

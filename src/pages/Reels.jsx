@@ -6,7 +6,7 @@ export default function Reels() {
   const { posts, toggleLike, addComment, removePost } = useContext(PostContext);
   const reels = posts.filter((p) => p.type === "reel");
 
-  // ❗ Khi vào trang Reels: chặn scroll ngoài body
+  // Khi vào trang Reels: chặn scroll ngoài body
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -17,8 +17,8 @@ export default function Reels() {
   return (
     <div
       className="
-        h-[calc(100vh-5rem)]       /* vừa đủ trừ navbar ~80px */
-        -mt-20                     /* đẩy lên để reel bắt đầu ngay dưới navbar */
+        h-[calc(100vh-5rem)]       
+        -mt-20                     
         overflow-y-scroll
         snap-y snap-mandatory
         scrollbar-none
@@ -32,7 +32,7 @@ export default function Reels() {
           <div
             key={post.id}
             className="
-              h-[calc(100vh-5rem)]   /* ✅ đảm bảo mỗi reel chiếm đúng chiều cao */
+              h-[calc(100vh-5rem)]
               snap-start
               flex items-center justify-center
               flex-shrink-0
