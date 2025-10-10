@@ -1,9 +1,9 @@
-import { useContext, useEffect } from "react";
-import { PostContext } from "../context/PostContext.jsx";
+import { useEffect } from "react";
+import { usePosts } from "../hooks/usePost.js";
 import ReelCard from "../components/ReelCard.jsx";
 
 export default function Reels() {
-  const { posts, toggleLike, addComment, removePost } = useContext(PostContext);
+  const { posts, toggleLike, addComment, removePost } = usePosts();
   const reels = posts.filter((p) => p.type === "reel");
 
   // Khi vào trang Reels: chặn scroll ngoài body
@@ -18,7 +18,7 @@ export default function Reels() {
     <div
       className="
         h-[calc(100vh-5rem)]       
-        -mt-20                     
+        -mt                     
         overflow-y-scroll
         snap-y snap-mandatory
         scrollbar-none

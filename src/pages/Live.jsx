@@ -1,9 +1,11 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useUser } from "../hooks/useUser.js";
 
 export default function Live() {
+  const { currentUser } = useUser();
   const [isLive, setIsLive] = useState(false);
-  const videoRef = useRef(null);
   const [stream, setStream] = useState(null);
+  const videoRef = useRef(null);
 
   const startLive = async () => {
     try {
@@ -11,11 +13,6 @@ export default function Live() {
         video: true,
         audio: true,
       });
-
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
-      }
-
       setStream(mediaStream);
       setIsLive(true);
     } catch (err) {
@@ -24,15 +21,18 @@ export default function Live() {
   };
 
   const stopLive = () => {
-    if (stream) {
-      stream.getTracks().forEach((track) => track.stop());
-      setStream(null);
-    }
+    if (stream) stream.getTracks().forEach((track) => track.stop());
+    setStream(null);
     setIsLive(false);
   };
 
   useEffect(() => {
-    // Cleanup khi rời trang
+    if (videoRef.current && stream) {
+      videoRef.current.srcObject = stream;
+    }
+  }, [stream]);
+
+  useEffect(() => {
     return () => {
       if (stream) stream.getTracks().forEach((t) => t.stop());
     };
@@ -42,49 +42,43 @@ export default function Live() {
     <div className="max-w-3xl mx-auto pt-6 text-center">
       <h1 className="text-3xl font-bold mb-6 text-blue-600">🎥 Live Stream</h1>
 
-      {/* Luôn render video để ref không bị null */}
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        className={`w-full rounded-lg shadow-lg mb-4 transition-all duration-300 ${
-          isLive ? "block" : "hidden"
-        }`}
-      />
-
       {!isLive ? (
-        <>
-          <div className="grid grid-cols-2 gap-4 mb-8">
-            {[1, 2, 3, 4].map((n) => (
-              <div
-                key={n}
-                className="relative bg-gray-200 aspect-video rounded-lg overflow-hidden cursor-pointer"
-              >
-                <div className="absolute inset-0 flex items-center justify-center text-gray-500 text-lg">
-                  Live #{n}
-                </div>
-                <div className="absolute bottom-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
-                  🔴 Live
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <button
-            onClick={startLive}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition"
-          >
-            Go Live 🚀
-          </button>
-        </>
+        <button
+          onClick={startLive}
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition"
+        >
+          🚀 Go Live
+        </button>
       ) : (
-        <div className="flex justify-center gap-4">
-          <button
-            onClick={stopLive}
-            className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700"
-          >
-            Dừng Live
-          </button>
+        <div className="relative inline-block w-full max-w-[640px]">
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            playsInline
+            className="w-full aspect-video rounded-xl shadow-lg bg-black"
+          />
+
+          {/* Thông tin người live */}
+          {currentUser && (
+            <div className="absolute top-4 left-4 flex items-center gap-3 bg-black/50 px-3 py-2 rounded-full">
+              <img
+                src={currentUser.avatar || "https://i.pravatar.cc/40"}
+                alt={currentUser.name || "User"}
+                className="w-8 h-8 rounded-full border-2 border-white"
+              />
+              <p className="text-white font-semibold">@{currentUser.name || "Ẩn danh"}</p>
+            </div>
+          )}
+
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
+            <button
+              onClick={stopLive}
+              className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700"
+            >
+              🛑 Dừng Live
+            </button>
+          </div>
         </div>
       )}
     </div>

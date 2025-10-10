@@ -4,25 +4,22 @@ import CommentBox from "./CommentBox";
 
 export default function ReelCard({ post, onLike, onAddComment, onDelete }) {
   const [showComments, setShowComments] = useState(false);
-  const [isVertical, setIsVertical] = useState(true);
   const videoRef = useRef(null);
-  const cardRef = useRef(null); 
+  const cardRef = useRef(null);
 
   // Xác định hướng video (ngang/dọc)
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-
     const handleLoadedMetadata = () => {
       const { videoWidth, videoHeight } = video;
-      setIsVertical(videoHeight >= videoWidth);
+      // (không cần lưu isVertical nếu chưa dùng)
     };
-
     video.addEventListener("loadedmetadata", handleLoadedMetadata);
     return () => video.removeEventListener("loadedmetadata", handleLoadedMetadata);
   }, []);
 
-  // Auto play
+  // Auto play / pause khi reel xuất hiện hoặc mất khỏi viewport
   useEffect(() => {
     const card = cardRef.current;
     const video = videoRef.current;
@@ -35,7 +32,7 @@ export default function ReelCard({ post, onLike, onAddComment, onDelete }) {
             video.play().catch(() => {});
           } else {
             video.pause();
-            setShowComments(false); // Đóng vid khi qua reel khác
+            setShowComments(false);
           }
         });
       },
@@ -48,17 +45,13 @@ export default function ReelCard({ post, onLike, onAddComment, onDelete }) {
 
   return (
     <motion.div
-      ref={cardRef} 
+      ref={cardRef}
       layout
       transition={{ type: "spring", stiffness: 80, damping: 15 }}
       className="relative flex justify-center items-start w-full h-[calc(100vh-5rem)] snap-start"
     >
-      <div
-        className={`flex items-start transition-all duration-500 ${
-          showComments ? "gap-4" : ""
-        }`}
-      >
-        {/* Video */}
+      <div className={`flex items-start transition-all duration-500 ${showComments ? "gap-4" : ""}`}>
+        {/* Video container */}
         <div className="relative w-[360px] h-[640px] bg-black rounded-2xl overflow-hidden shadow-xl flex-shrink-0">
           <video
             ref={videoRef}
@@ -70,27 +63,36 @@ export default function ReelCard({ post, onLike, onAddComment, onDelete }) {
             autoPlay
           />
 
-          {/* Gradient overlay */}
+          {/* Overlay gradient */}
           <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black/70 to-transparent"></div>
 
-          {/* User + caption */}
-          <div className="absolute bottom-13 left-4 text-white drop-shadow-md max-w-[70%]">
-            <p className="font-semibold text-base">@{post.user}</p>
+          {/* Avatar + username */}
+          <div className="absolute top-4 left-4 flex items-center gap-3">
+            <img
+              src={post.userAvatar}
+              alt={post.userName}
+              className="w-10 h-10 rounded-full border-2 border-white"
+            />
+            <span className="text-white font-semibold text-sm drop-shadow">@{post.userName}</span>
+          </div>
+
+          {/* Caption */}
+          <div className="absolute bottom-16 left-4 text-white drop-shadow-md max-w-[70%]">
             <p className="text-sm opacity-90">{post.caption}</p>
           </div>
 
           {/* Action buttons */}
-          <div className="absolute right-3 bottom-30 flex flex-col items-center gap-5 text-white drop-shadow-md">
+          <div className="absolute right-3 bottom-28 flex flex-col items-center gap-5 text-white drop-shadow-md">
+            {/* Like */}
             <button
               onClick={() => onLike(post.id)}
-              className={`flex flex-col items-center ${
-                post.likedByMe ? "text-red-500" : "text-white"
-              }`}
+              className={`flex flex-col items-center ${post.likedByMe ? "text-red-500" : "text-white"}`}
             >
               <span className="text-3xl">{post.likedByMe ? "❤️" : "🤍"}</span>
               <span className="text-sm mt-1">{post.likes}</span>
             </button>
 
+            {/* Comments */}
             <button
               onClick={() => setShowComments((s) => !s)}
               className="flex flex-col items-center"
@@ -99,6 +101,7 @@ export default function ReelCard({ post, onLike, onAddComment, onDelete }) {
               <span className="text-sm mt-1">{post.comments.length}</span>
             </button>
 
+            {/* Delete */}
             <button
               onClick={() => onDelete(post.id)}
               className="flex flex-col items-center text-gray-400 hover:text-red-500 text-2xl"
@@ -128,11 +131,7 @@ export default function ReelCard({ post, onLike, onAddComment, onDelete }) {
                   ✕
                 </button>
               </div>
-              <CommentBox
-                postId={post.id}
-                comments={post.comments}
-                onAdd={onAddComment}
-              />
+              <CommentBox postId={post.id} comments={post.comments} onAdd={onAddComment} />
             </motion.div>
           )}
         </AnimatePresence>

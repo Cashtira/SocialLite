@@ -1,10 +1,11 @@
-import { useContext, useState } from "react";
-import { PostContext } from "../context/PostContext.jsx";
+import { useState } from "react";
+import { usePosts } from "../hooks/usePost.js";
+import { useUser } from "../hooks/useUser.js";
 import PostCard from "../components/PostCard";
 
 export default function Feed() {
-  const { posts, addPost, toggleLike, addComment, removePost } = useContext(PostContext);
-
+  const { posts, addPost, toggleLike, addComment, removePost } = usePosts();
+  const { currentUser} = useUser();
   // form state
   const [caption, setCaption] = useState("");
   const [fileData, setFileData] = useState(null); // data URL
@@ -48,7 +49,8 @@ export default function Feed() {
 
     const newPost = {
       id: crypto.randomUUID(),
-      user: "Minh Kha",
+      userId: currentUser.id,
+      userName: currentUser.name,
       caption: caption.trim(),
       media: fileData,
       type,
