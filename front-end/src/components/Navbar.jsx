@@ -1,12 +1,21 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useUser } from "../hooks/useUser";
 
 export default function Navbar() {
-  const base =
-    "px-3 py-2 rounded-lg font-medium transition-colors duration-200";
-  const active =
-    "bg-blue-600 text-white hover:bg-blue-600";
-  const inactive =
-    "text-gray-700 hover:bg-blue-100 hover:text-blue-700";
+  const { currentUser, logout } = useUser();
+  const navigate = useNavigate();
+
+  const base = "px-3 py-2 rounded-lg font-medium transition-colors duration-200";
+  const active = "bg-blue-600 text-white hover:bg-blue-600";
+  const inactive = "text-gray-700 hover:bg-blue-100 hover:text-blue-700";
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login"); // về trang login
+  };
+
+  // Nếu chưa đăng nhập, không hiển thị navbar chính
+  if (!currentUser) return null;
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white border-b shadow-sm z-50">
@@ -19,7 +28,8 @@ export default function Navbar() {
           SocialLite
         </NavLink>
 
-        <div className="flex gap-2">
+        {/* Links */}
+        <div className="flex gap-2 items-center">
           <NavLink
             to="/"
             className={({ isActive }) =>
@@ -55,6 +65,14 @@ export default function Navbar() {
           >
             👤 Profile
           </NavLink>
+
+          {/* Nút đăng xuất */}
+          <button
+            onClick={handleLogout}
+            className="ml-3 px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+          >
+            🚪 Đăng xuất
+          </button>
         </div>
       </div>
     </nav>

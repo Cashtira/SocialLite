@@ -11,6 +11,7 @@ export function PostProvider({ children }) {
     const user = mockUsers.find((u) => String(u.id) === String(post.userId)) || {};
     return {
       ...post,
+      user,
       userName: user.name || "Người dùng ẩn danh",
       userAvatar: user.avatar || "https://i.pravatar.cc/100",
       username: user.username || "unknown",
@@ -39,8 +40,13 @@ export function PostProvider({ children }) {
   }, [posts]);
 
   const addPost = (post) => {
-    setPosts((prev) => [post, ...prev]);
-  };
+  setPosts((prev) => {
+    // Gắn thông tin user cho bài viết mới
+    const enrichedPost = attachUserData([post])[0];
+    return [enrichedPost, ...prev];
+  });
+};
+
 
   const toggleLike = (postId) => {
     setPosts((prev) =>

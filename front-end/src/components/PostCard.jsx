@@ -1,5 +1,6 @@
 import { useState } from "react";
 import CommentBox from "./CommentBox";
+import { Link } from "react-router-dom";
 
 export default function PostCard({
   post,
@@ -15,6 +16,10 @@ export default function PostCard({
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">
+           <Link
+            to={`/profile/${post.user?.id}`}
+            className="flex items-center gap-3 hover:opacity-80 transition"
+          >
           <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
             {post.userAvatar ? (
               <img
@@ -31,7 +36,7 @@ export default function PostCard({
               {post.userName || "Người dùng ẩn danh"}
             </p>
             <p className="text-xs text-gray-500">{post.createdAt}</p>
-          </div>
+          </div></Link>
         </div>
         <div className="text-sm text-gray-400">{post.type}</div>
       </div>

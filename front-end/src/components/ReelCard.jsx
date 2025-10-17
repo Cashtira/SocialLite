@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import CommentBox from "./CommentBox";
+import { Link } from "react-router-dom";
 
 export default function ReelCard({
   post,
@@ -87,6 +88,9 @@ export default function ReelCard({
           <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black/70 to-transparent"></div>
 
           {/* --- Avatar + username --- */}
+          <Link
+            to={`/profile/${post.user?.id}`}
+            className="absolute top-4 left-4 flex items-center gap-3 hover:opacity-80 transition">
           <div className="absolute top-4 left-4 flex items-center gap-3">
             <img
               src={post.userAvatar}
@@ -97,6 +101,7 @@ export default function ReelCard({
               @{post.userName}
             </span>
           </div>
+          </Link>
 
           {/* --- Caption --- */}
           <div className="absolute bottom-4 left-4 text-white drop-shadow-md max-w-[70%]">
