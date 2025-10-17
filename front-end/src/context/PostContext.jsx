@@ -1,15 +1,41 @@
 import { createContext, useState, useEffect } from "react";
+import { mockPosts } from "../data/mockPosts";
+import { mockUsers } from "../data/mockUsers";
 
 export const PostContext = createContext();
 
 export function PostProvider({ children }) {
-  const [posts, setPosts] = useState(() => {
-    const saved = localStorage.getItem("posts");
-    return saved ? JSON.parse(saved) : [];
+  // 🧠 Gắn thông tin user vào mỗi post
+  const attachUserData = (posts) =>
+  posts.map((post) => {
+    const user = mockUsers.find((u) => String(u.id) === String(post.userId)) || {};
+    return {
+      ...post,
+      userName: user.name || "Người dùng ẩn danh",
+      userAvatar: user.avatar || "https://i.pravatar.cc/100",
+      username: user.username || "unknown",
+    };
   });
 
+  const [posts, setPosts] = useState(() => {
+    const saved = localStorage.getItem("posts");
+    if (saved) {
+      console.log("🗂️ Load từ localStorage");
+      return JSON.parse(saved);
+    } else {
+      console.log("🌱 Load từ mockPosts");
+      return attachUserData(mockPosts);
+    }
+  });
+
+  // Lưu xuống localStorage mỗi khi posts thay đổi
   useEffect(() => {
     localStorage.setItem("posts", JSON.stringify(posts));
+  }, [posts]);
+
+  // Log kiểm tra xem posts có load không
+  useEffect(() => {
+    console.log("📦 Posts hiện tại:", posts);
   }, [posts]);
 
   const addPost = (post) => {
@@ -20,7 +46,11 @@ export function PostProvider({ children }) {
     setPosts((prev) =>
       prev.map((p) =>
         p.id === postId
-          ? { ...p, likedByMe: !p.likedByMe, likes: p.likedByMe ? p.likes - 1 : p.likes + 1 }
+          ? {
+              ...p,
+              likedByMe: !p.likedByMe,
+              likes: p.likedByMe ? p.likes - 1 : p.likes + 1,
+            }
           : p
       )
     );

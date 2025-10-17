@@ -5,9 +5,9 @@ export const UserContext = createContext();
 export function UserProvider({ children }) {
   const [currentUser, setCurrentUser] = useState({
     id: "user-1",
-    name: "Minh Kha",
-    avatar: "https://i.pravatar.cc/150?u=minhkha",
-    bio: "Dev đam mê sáng tạo",
+    name: "Seiun Sky",
+    avatar: "/img/seiunSkyAvatar.png",
+    bio: "Rod and Fish, you want some?",
   });
 
   return (

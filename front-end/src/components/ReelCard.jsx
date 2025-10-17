@@ -99,7 +99,7 @@ export default function ReelCard({
           </div>
 
           {/* --- Caption --- */}
-          <div className="absolute bottom-16 left-4 text-white drop-shadow-md max-w-[70%]">
+          <div className="absolute bottom-4 left-4 text-white drop-shadow-md max-w-[70%]">
             <p className="text-sm opacity-90">{post.caption}</p>
           </div>
 
