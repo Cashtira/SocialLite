@@ -9,8 +9,10 @@ export default function ReelCard({
   onAddComment,
   onToggleCommentLike,
   onDelete,
+  currentUser,
 }) {
   const [showComments, setShowComments] = useState(false);
+  const isOwner = currentUser?.id === post.userId;
   const [isVertical, setIsVertical] = useState(true);
   const videoRef = useRef(null);
   const cardRef = useRef(null);
@@ -133,12 +135,13 @@ export default function ReelCard({
             </button>
 
             {/* Xóa bài */}
+            {isOwner && (
             <button
               onClick={() => onDelete(post.id)}
               className="flex flex-col items-center text-gray-400 hover:text-red-500 text-2xl"
             >
               🗑️
-            </button>
+            </button>)}
           </div>
         </div>
 

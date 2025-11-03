@@ -1,10 +1,12 @@
 import { useEffect } from "react";
 import { usePosts } from "../hooks/usePost.js";
+import { useUser } from "../hooks/useUser.js";
 import ReelCard from "../components/ReelCard.jsx";
 
 export default function Reels() {
   const { posts, toggleLike, addComment, toggleCommentLike, removePost } = usePosts();
   const reels = posts.filter((p) => p.type === "reel");
+  const { currentUser} = useUser();
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -42,6 +44,7 @@ export default function Reels() {
               onAddComment={addComment}
               onToggleCommentLike={toggleCommentLike}
               onDelete={removePost}
+              currentUser={currentUser}
             />
           </div>
         ))

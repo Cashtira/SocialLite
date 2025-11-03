@@ -129,6 +129,7 @@ export default function Feed() {
                 onToggleCommentLike={(postId, commentId) =>
                   toggleCommentLike(postId, commentId)
                 }
+                currentUser={currentUser}
               />
             ))
         )}

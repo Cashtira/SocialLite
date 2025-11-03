@@ -8,35 +8,39 @@ export default function PostCard({
   onAddComment,
   onDelete,
   onToggleCommentLike,
+  currentUser, // 👈 thêm dòng này
 }) {
   const [showComments, setShowComments] = useState(false);
+
+  const isOwner = currentUser?.id === post.userId; // 👈 kiểm tra chủ bài viết
 
   return (
     <article className="border rounded-2xl p-4 hover:shadow-md transition-shadow bg-white">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">
-           <Link
+          <Link
             to={`/profile/${post.user?.id}`}
             className="flex items-center gap-3 hover:opacity-80 transition"
           >
-          <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-            {post.userAvatar ? (
-              <img
-                src={post.userAvatar}
-                alt={`${post.userName || "Người dùng ẩn danh"} avatar`}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <span className="text-xl">😎</span>
-            )}
-          </div>
-          <div>
-            <p className="font-semibold text-gray-800">
-              {post.userName || "Người dùng ẩn danh"}
-            </p>
-            <p className="text-xs text-gray-500">{post.createdAt}</p>
-          </div></Link>
+            <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+              {post.userAvatar ? (
+                <img
+                  src={post.userAvatar}
+                  alt={`${post.userName || "Người dùng ẩn danh"} avatar`}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-xl">😎</span>
+              )}
+            </div>
+            <div>
+              <p className="font-semibold text-gray-800">
+                {post.userName || "Người dùng ẩn danh"}
+              </p>
+              <p className="text-xs text-gray-500">{post.createdAt}</p>
+            </div>
+          </Link>
         </div>
         <div className="text-sm text-gray-400">{post.type}</div>
       </div>
@@ -77,12 +81,15 @@ export default function PostCard({
           💬 {post.comments?.length ?? 0}
         </button>
 
-        <button
-          onClick={() => onDelete(post.id)}
-          className="ml-auto text-sm text-red-500 hover:text-red-700 transition-colors"
-        >
-          Xóa
-        </button>
+        {/* 👇 Chỉ hiển thị nút Xóa nếu là chủ bài viết */}
+        {isOwner && (
+          <button
+            onClick={() => onDelete(post.id)}
+            className="ml-auto text-sm text-red-500 hover:text-red-700 transition-colors"
+          >
+            Xóa
+          </button>
+        )}
       </div>
 
       {/* Comments */}
@@ -92,7 +99,7 @@ export default function PostCard({
             postId={post.id}
             comments={post.comments ?? []}
             onAdd={onAddComment}
-            onToggleLike={onToggleCommentLike} 
+            onToggleLike={onToggleCommentLike}
           />
         </div>
       )}

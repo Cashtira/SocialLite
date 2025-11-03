@@ -7,6 +7,11 @@ export default function Live() {
   const [stream, setStream] = useState(null);
   const videoRef = useRef(null);
 
+  // Form setup trước khi live
+  const [showSetup, setShowSetup] = useState(false);
+  const [liveTitle, setLiveTitle] = useState("");
+  const [liveDesc, setLiveDesc] = useState("");
+
   // Like + Comment states
   const [likes, setLikes] = useState(0);
   const [comments, setComments] = useState([]);
@@ -21,6 +26,7 @@ export default function Live() {
       });
       setStream(mediaStream);
       setIsLive(true);
+      setShowSetup(false);
     } catch (err) {
       alert("Không thể truy cập camera/mic: " + err.message);
     }
@@ -32,6 +38,8 @@ export default function Live() {
     setIsLive(false);
     setLikes(0);
     setComments([]);
+    setLiveTitle("");
+    setLiveDesc("");
   };
 
   useEffect(() => {
@@ -47,17 +55,70 @@ export default function Live() {
   }, [stream]);
 
   return (
-    <div className="max-w-3xl mx-auto pt-6 text-center">
+    <div className="max-w-3xl mx-auto pt-6 text-center relative">
       <h1 className="text-3xl font-bold mb-6 text-blue-600">🎥 Live Stream</h1>
 
-      {!isLive ? (
+      {/* Nút Go Live */}
+      {!isLive && !showSetup && (
         <button
-          onClick={startLive}
+          onClick={() => setShowSetup(true)}
           className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition"
         >
           🚀 Go Live
         </button>
-      ) : (
+      )}
+
+      {/* Form setup buổi live */}
+      {showSetup && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl relative">
+            <h2 className="text-2xl font-semibold mb-4 text-blue-600">
+              Cài đặt buổi Live
+            </h2>
+
+            <div className="text-left space-y-3">
+              <div>
+                <label className="block font-medium">Tiêu đề buổi Live:</label>
+                <input
+                  value={liveTitle}
+                  onChange={(e) => setLiveTitle(e.target.value)}
+                  placeholder="VD: Xin chào mọi người."
+                  className="w-full border rounded-lg px-3 py-2 mt-1"
+                />
+              </div>
+              <div>
+                <label className="block font-medium">Mô tả:</label>
+                <textarea
+                  value={liveDesc}
+                  onChange={(e) => setLiveDesc(e.target.value)}
+                  placeholder="Giới thiệu ngắn gọn buổi live..."
+                  rows={3}
+                  className="w-full border rounded-lg px-3 py-2 mt-1"
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() => setShowSetup(false)}
+                className="px-4 py-2 rounded-lg border hover:bg-gray-100"
+              >
+                Hủy
+              </button>
+              <button
+                onClick={startLive}
+                disabled={!liveTitle.trim()}
+                className="px-5 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 disabled:opacity-50"
+              >
+                Bắt đầu phát
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Màn hình live */}
+      {isLive && (
         <div className="relative inline-block w-full max-w-[640px]">
           <video
             ref={videoRef}
@@ -75,7 +136,12 @@ export default function Live() {
                 alt={currentUser.name || "User"}
                 className="w-8 h-8 rounded-full border-2 border-white"
               />
-              <p className="text-white font-semibold">@{currentUser.name || "Ẩn danh"}</p>
+              <div className="text-left">
+                <p className="text-white font-semibold">@{currentUser.name}</p>
+                {liveTitle && (
+                  <p className="text-xs text-gray-200 italic">{liveTitle}</p>
+                )}
+              </div>
             </div>
           )}
 
@@ -105,7 +171,9 @@ export default function Live() {
 
               <div className="space-y-2 mb-3">
                 {comments.length === 0 ? (
-                  <p className="text-gray-400 text-sm text-center">Chưa có bình luận.</p>
+                  <p className="text-gray-400 text-sm text-center">
+                    Chưa có bình luận.
+                  </p>
                 ) : (
                   comments.map((c, i) => (
                     <div key={i} className="flex items-start gap-2">

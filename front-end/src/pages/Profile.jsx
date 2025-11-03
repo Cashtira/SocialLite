@@ -57,6 +57,7 @@ export default function Profile() {
               onAddComment={addComment}
               onToggleCommentLike={toggleCommentLike}
               onDelete={removePost}
+              currentUser={currentUser}
             />
           ))
         ) : (
